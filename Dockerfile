@@ -1,6 +1,7 @@
 FROM alpine
 
-RUN apk update && apk add inotify-tools
+RUN apk update && apk add inotify-tools bash
 
-VOLUME ["/input", "/output"]
-ENTRYPOINT ["/bin/sh", "-c", "inotifywait -m -q -e close_write /input --format '%w%f' | while read file; do echo $file; mv -n \"$file\" /output; rm -f \"$file\"; done"]
+ADD entrypoint.sh /entrypoint.sh
+
+ENTRYPOINT ["/bin/bash", "/entrypoint.sh"]
